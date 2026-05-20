@@ -57,7 +57,7 @@ anime-website/
 ```
 
 ## Screenshot
-*(Tambahkan screenshot setelah menjalankan aplikasi)*
+![Alt Text](img/screenshot_website.png)
 
 ## Catatan
 - API Jikan memiliki rate limit ~3 request/detik, jika halaman gagal dimuat tunggu beberapa detik lalu refresh.
