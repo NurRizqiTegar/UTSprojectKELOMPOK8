@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}AniRank - Database Anime Terlengkap{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Temukan Anime<br><span>Favoritmu</span></h1>
+        <p class="hero-sub">Database anime terlengkap dengan rating, sinopsis, dan informasi lengkap dari MyAnimeList</p>
+        <form action="/search" method="GET" class="hero-search">
+            <input type="text" name="q" placeholder="Naruto, Attack on Titan, One Piece...">
+            <button type="submit">Cari Sekarang</button>
+        </form>
+        <div class="hero-genres">
+            <span>Genre populer:</span>
+            <a href="/genre/1">Action</a>
+            <a href="/genre/4">Comedy</a>
+            <a href="/genre/8">Drama</a>
+            <a href="/genre/22">Romance</a>
+            <a href="/genre/37">Supernatural</a>
+        </div>
+    </div>
+    <div class="hero-art">
+        <div class="hero-bubble b1"></div>
+        <div class="hero-bubble b2"></div>
+        <div class="hero-bubble b3"></div>
+    </div>
+</section>
+
+<!-- Top Anime -->
+<section class="section">
+    <div class="section-header">
+        <h2>🏆 Top Anime Sepanjang Masa</h2>
+        <a href="/search?q=" class="see-all">Lihat Semua →</a>
+    </div>
+    <div class="anime-grid">
+        {% for anime in top_anime %}
+        <a href="/anime/{{ anime.mal_id }}" class="anime-card">
+            <div class="card-img-wrap">
+                <img src="{{ anime.images.jpg.large_image_url or anime.images.jpg.image_url }}" 
+                     alt="{{ anime.title }}" loading="lazy">
+                <div class="card-rank">#{{ loop.index }}</div>
+                <div class="card-score">
+                    ⭐ {{ anime.score or 'N/A' }}
+                </div>
+                <div class="card-overlay">
+                    <span>Lihat Detail</span>
+                </div>
+            </div>
+            <div class="card-info">
+                <h3>{{ anime.title }}</h3>
+                <div class="card-meta">
+                    <span class="badge">{{ anime.type or 'TV' }}</span>
+                    <span>{{ anime.episodes or '?' }} ep</span>
+                    <span>{{ anime.year or '' }}</span>
+                </div>
+                <div class="card-genres">
+                    {% for genre in anime.genres[:2] %}
+                    <span class="genre-tag">{{ genre.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Seasonal Anime -->
+{% if seasonal_anime %}
+<section class="section section-dark">
+    <div class="section-header">
+        <h2>📺 Sedang Tayang Sekarang</h2>
+    </div>
+    <div class="anime-row">
+        {% for anime in seasonal_anime %}
+        <a href="/anime/{{ anime.mal_id }}" class="anime-card-h">
+            <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}" loading="lazy">
+            <div class="card-h-info">
+                <h3>{{ anime.title }}</h3>
+                <p>⭐ {{ anime.score or 'N/A' }} · {{ anime.status }}</p>
+                <div class="card-genres">
+                    {% for genre in anime.genres[:2] %}
+                    <span class="genre-tag">{{ genre.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

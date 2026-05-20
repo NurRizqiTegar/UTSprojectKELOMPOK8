@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if query %}Hasil: "{{ query }}"{% else %}Jelajahi Anime{% endif %} - AniRank
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <h2>
+            {% if query %}
+                🔍 Hasil pencarian: <em>"{{ query }}"</em>
+            {% else %}
+                🎌 Jelajahi Anime
+            {% endif %}
+        </h2>
+    </div>
+
+    {% if results %}
+    <div class="anime-grid">
+        {% for anime in results %}
+        <a href="/anime/{{ anime.mal_id }}" class="anime-card">
+            <div class="card-img-wrap">
+                <img src="{{ anime.images.jpg.large_image_url or anime.images.jpg.image_url }}" 
+                     alt="{{ anime.title }}" loading="lazy">
+                <div class="card-score">⭐ {{ anime.score or 'N/A' }}</div>
+                <div class="card-overlay"><span>Lihat Detail</span></div>
+            </div>
+            <div class="card-info">
+                <h3>{{ anime.title }}</h3>
+                <div class="card-meta">
+                    <span class="badge">{{ anime.type or 'TV' }}</span>
+                    <span>{{ anime.episodes or '?' }} ep</span>
+                    <span>{{ anime.year or '' }}</span>
+                </div>
+                <div class="card-genres">
+                    {% for genre in anime.genres[:2] %}
+                    <span class="genre-tag">{{ genre.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        {% if page > 1 %}
+        <a href="?q={{ query }}&genre={{ genre }}&page={{ page - 1 }}" class="page-btn">← Sebelumnya</a>
+        {% endif %}
+        <span class="page-info">Halaman {{ page }}</span>
+        {% if has_next %}
+        <a href="?q={{ query }}&genre={{ genre }}&page={{ page + 1 }}" class="page-btn">Selanjutnya →</a>
+        {% endif %}
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <p class="empty-icon">😢</p>
+        <h3>Tidak ada hasil ditemukan</h3>
+        <p>Coba kata kunci lain atau jelajahi berdasarkan genre</p>
+        <a href="/" class="btn-primary">Kembali ke Beranda</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

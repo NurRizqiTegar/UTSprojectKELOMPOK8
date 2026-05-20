@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ anime.title if anime else 'Anime' }} - AniRank{% endblock %}
+
+{% block content %}
+{% if anime %}
+<div class="detail-hero" style="background-image: url('{{ anime.images.jpg.large_image_url }}')">
+    <div class="detail-hero-overlay"></div>
+    <div class="detail-hero-content">
+        <div class="detail-poster">
+            <img src="{{ anime.images.jpg.large_image_url }}" alt="{{ anime.title }}">
+        </div>
+        <div class="detail-meta">
+            <div class="detail-badges">
+                {% for genre in anime.genres %}
+                <a href="/genre/{{ genre.mal_id }}" class="genre-tag">{{ genre.name }}</a>
+                {% endfor %}
+            </div>
+            <h1>{{ anime.title }}</h1>
+            {% if anime.title_english and anime.title_english != anime.title %}
+            <p class="detail-eng-title">{{ anime.title_english }}</p>
+            {% endif %}
+
+            <div class="detail-stats">
+                <div class="stat-box">
+                    <span class="stat-val">⭐ {{ anime.score or 'N/A' }}</span>
+                    <span class="stat-lbl">Skor MAL</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val">{{ anime.rank or 'N/A' }}</span>
+                    <span class="stat-lbl">Ranking</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val">{{ anime.members | int if anime.members else 0 | string }}</span>
+                    <span class="stat-lbl">Member</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val">{{ anime.episodes or '?' }}</span>
+                    <span class="stat-lbl">Episode</span>
+                </div>
+            </div>
+
+            <div class="detail-info-row">
+                <span><strong>Status:</strong> {{ anime.status }}</span>
+                <span><strong>Tipe:</strong> {{ anime.type }}</span>
+                <span><strong>Tayang:</strong> {{ anime.aired.string if anime.aired else '-' }}</span>
+                <span><strong>Studio:</strong> 
+                    {% for s in anime.studios %}{{ s.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+                    {% if not anime.studios %}N/A{% endif %}
+                </span>
+            </div>
+
+            {% if anime.trailer and anime.trailer.url %}
+            <a href="{{ anime.trailer.url }}" target="_blank" class="btn-trailer">▶ Tonton Trailer</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="detail-body">
+    <!-- Sinopsis -->
+    <section class="detail-section">
+        <h2>Sinopsis</h2>
+        <p class="synopsis">{{ anime.synopsis or 'Sinopsis tidak tersedia.' }}</p>
+    </section>
+
+    <!-- Karakter -->
+    {% if characters %}
+    <section class="detail-section">
+        <h2>Karakter Utama</h2>
+        <div class="char-grid">
+            {% for char_entry in characters %}
+            {% set char = char_entry.character %}
+            <div class="char-card">
+                <img src="{{ char.images.jpg.image_url if char.images else '' }}" alt="{{ char.name }}">
+                <div class="char-info">
+                    <strong>{{ char.name }}</strong>
+                    <span>{{ char_entry.role }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Info Tambahan -->
+    <section class="detail-section">
+        <h2>Informasi Lainnya</h2>
+        <table class="info-table">
+            <tr><td>Judul Jepang</td><td>{{ anime.title_japanese or '-' }}</td></tr>
+            <tr><td>Rating</td><td>{{ anime.rating or '-' }}</td></tr>
+            <tr><td>Durasi</td><td>{{ anime.duration or '-' }}</td></tr>
+            <tr><td>Popularitas</td><td>#{{ anime.popularity or '-' }}</td></tr>
+            <tr><td>Favorit</td><td>{{ anime.favorites or '0' }}</td></tr>
+            <tr><td>Sumber</td><td>{{ anime.source or '-' }}</td></tr>
+            <tr>
+                <td>Tema</td>
+                <td>{% for t in anime.themes %}{{ t.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% if not anime.themes %}-{% endif %}</td>
+            </tr>
+        </table>
+    </section>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <p class="empty-icon">😕</p>
+    <h3>Anime tidak ditemukan</h3>
+    <a href="/" class="btn-primary">Kembali ke Beranda</a>
+</div>
+{% endif %}
+{% endblock %}

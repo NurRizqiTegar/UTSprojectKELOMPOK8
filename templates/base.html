@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AniRank - Anime Database{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="logo">
+            <span class="logo-icon">▶</span>
+            AniRank
+        </a>
+        <form class="nav-search" action="/search" method="GET">
+            <input type="text" name="q" placeholder="Cari anime..." value="{{ request.args.get('q', '') }}">
+            <button type="submit">🔍</button>
+        </form>
+        <div class="nav-links">
+            <a href="/">Beranda</a>
+            <a href="/search?genre=1">Action</a>
+            <a href="/search?genre=4">Comedy</a>
+            <a href="/search?genre=22">Romance</a>
+        </div>
+    </div>
+</nav>
+
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <p class="footer-logo">AniRank</p>
+        <p>Data dari <a href="https://jikan.moe" target="_blank">Jikan API (MyAnimeList)</a></p>
+        <p>Copyrigth by Rayniz</p>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
